@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router';
 import {connect} from 'react-redux';
 import agent from '../agent';
+import ListErrors from "./ListErrors";
 
 const mapStateToProps = state => ({...state.auth});
 
@@ -36,9 +38,9 @@ class Login extends React.Component {
                         <div className="col-md-6 offset-md-3 col-xs-12">
                             <h1 className="text-xs-center">Sign In</h1>
                             <p className="text-xs-center">
-                                <a>
+                                <Link to="register">
                                     Need an account?
-                                </a>
+                                </Link>
                             </p>
 
                             <ListErrors errors={this.props.errors}/>

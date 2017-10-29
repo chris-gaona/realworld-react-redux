@@ -37,7 +37,9 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <Header appName={this.props.appName}/>
+                <Header
+                    currentUser={this.props.currentUser}
+                    appName={this.props.appName}/>
                 {/*The component to be rendered is represented by the props.children property, and the App.contextTypes snippet tells react-router to attach the children property to this component's props*/}
                 {this.props.children}
             </div>
