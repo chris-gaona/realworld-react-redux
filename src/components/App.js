@@ -1,5 +1,4 @@
 import Header from './Header';
-import Home from './Home';
 import React from 'react';
 import {connect} from 'react-redux';
 
@@ -13,11 +12,16 @@ class App extends React.Component {
         return (
             <div>
                 <Header appName={this.props.appName}/>
-                <Home />
+                {/*The component to be rendered is represented by the props.children property, and the App.contextTypes snippet tells react-router to attach the children property to this component's props*/}
+                {this.props.children}
             </div>
         );
     }
 }
+
+App.contextTypes = {
+    router: React.PropTypes.object.isRequired
+};
 
 // use the connect() function to bind our state to the App component
 export default connect(mapStateToProps, () => ({}))(App);
