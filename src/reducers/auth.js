@@ -11,7 +11,7 @@ export default (state = {}, action) => {
         case 'REGISTER_PAGE_UNLOADED':
             return {};
         case 'ASYNC_START':
-            if (action.subtype === 'LOGIN' || action.subtype === 'REGSITER') {
+            if (action.subtype === 'LOGIN' || action.subtype === 'REGISTER') {
                 return {...state, inProgress: true};
             }
             break;
