@@ -1,4 +1,4 @@
-import {applyMiddleware, createStore} from "redux";
+import {applyMiddleware, combineReducers, createStore} from "redux";
 import {promiseMiddleware} from "./middleware";
 import auth from "./reducers/auth";
 import common from "./reducers/common";
