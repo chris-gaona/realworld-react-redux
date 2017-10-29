@@ -20,10 +20,14 @@ const Articles = {
 };
 
 const Auth = {
+    current: () =>
+        requests.get('/user'),
     login: (email, password) =>
         requests.post('/users/login', {user: {email, password}})
 };
 
 export default {
-    Articles
+    Articles,
+    Auth,
+    setToken: _token => {token = _token;}
 };
