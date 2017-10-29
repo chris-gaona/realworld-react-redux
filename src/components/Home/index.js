@@ -7,7 +7,7 @@ import agent from "../../agent";
 const Promise = global.Promise;
 
 const mapStateToProps = state => ({
-    appName: state.appName
+    appName: state.common.appName
 });
 
 // mapDispatchToProps function is the second function that gets passed to connect()
