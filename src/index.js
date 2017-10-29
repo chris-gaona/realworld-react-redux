@@ -2,7 +2,8 @@ import App from './components/App';
 import {Provider} from 'react-redux';
 import ReactDOM from 'react-dom';
 import React from 'react';
-import {createStore} from 'redux';
+import {applyMiddleware, createStore} from 'redux';
+import {promiseMiddleware} from "./middleware";
 
 const defaultState = {
     appName: 'conduit',
@@ -17,7 +18,8 @@ const reducer = function (state = defaultState, action) {
   return state;
 };
 
-const store = createStore(reducer);
+// applies the promise middleware to our store
+const store = createStore(reducer, applyMiddleware(promiseMiddleware));
 
 ReactDOM.render((
     <Provider store={store}>
