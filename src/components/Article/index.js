@@ -32,7 +32,7 @@ class Article extends React.Component {
             return null;
         }
 
-        const markup = {_html: marked(this.props.article.body)};
+        const markup = {__html: marked(this.props.article.body)};
         const canModify = this.props.currentUser && this.props.currentUser.username === this.props.article.author.username;
 
         return (
