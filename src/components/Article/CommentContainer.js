@@ -2,6 +2,7 @@ import React from 'react';
 import ListErrors from "../ListErrors";
 import {Link} from "react-router";
 import CommentInput from "./CommentInput";
+import CommentList from "./CommentList";
 
 const CommentContainer = props => {
   if (props.currentUser) {

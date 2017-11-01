@@ -38,7 +38,9 @@ const Comments = {
     create: (slug, comment) =>
         requests.post(`/articles/${slug}/comments`, {comment}),
     forArticle: slug =>
-        requests.get(`/articles/${slug}/comments`)
+        requests.get(`/articles/${slug}/comments`),
+    delete: (slug, commentId) =>
+        requests.del(`/articles/${slug}/comments/${commentId}`)
 };
 
 const Auth = {
