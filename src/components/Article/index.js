@@ -2,6 +2,8 @@ import * as React from "react";
 import agent from "../../agent";
 import {connect} from "react-redux";
 import marked from "marked";
+import ArticleMeta from "./ArticleMeta";
+import CommentContainer from "./CommentContainer";
 
 const mapStateToProps = state => ({
     ...state.article,
@@ -41,9 +43,9 @@ class Article extends React.Component {
                     <div className="container">
                         <h1>{this.props.article.title}</h1>
 
-                        {/*<ArticleMeta*/}
-                            {/*article={this.props.article}*/}
-                            {/*canModify={canModify}/>*/}
+                        <ArticleMeta
+                            article={this.props.article}
+                            canModify={canModify}/>
 
                     </div>
                 </div>
@@ -75,11 +77,11 @@ class Article extends React.Component {
                     </div>
 
                     <div className="row">
-                        {/*<CommentContainer*/}
-                            {/*comments={this.props.comments || {}}*/}
-                            {/*errors={this.props.commentErrors}*/}
-                            {/*slug={this.props.params.id}*/}
-                            {/*currentUser={this.props.currentUser} />*/}
+                        <CommentContainer
+                            comments={this.props.comments || {}}
+                            errors={this.props.commentErrors}
+                            slug={this.props.params.id}
+                            currentUser={this.props.currentUser} />
                     </div>
                 </div>
             </div>
