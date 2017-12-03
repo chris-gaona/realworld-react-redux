@@ -9,17 +9,20 @@ import Login from './components/Login';
 import Register from "./components/Register";
 import Settings from "./components/Settings";
 import Article from "./components/Article";
+import Profile from "./components/Profile";
 
 // adds react router setup with nested routes
 ReactDOM.render((
     <Provider store={store}>
         <Router history={hashHistory}>
             <Route path="/" component={App}>
+                {/*path="/" will render App component with Home component sitting on top*/}
                 <IndexRoute component={Home}/>
                 <Route path="login" component={Login}/>
                 <Route path="register" component={Register}/>
                 <Route path="settings" component={Settings}/>
                 <Route path="article/:id" component={Article}/>
+              <Route path="@:username" component={Profile} />
             </Route>
         </Router>
     </Provider>

@@ -40,13 +40,15 @@ class App extends React.Component {
                 <Header
                     currentUser={this.props.currentUser}
                     appName={this.props.appName}/>
-                {/*The component to be rendered is represented by the props.children property, and the App.contextTypes snippet tells react-router to attach the children property to this component's props*/}
+                {/*The component to be rendered is represented by the props.children property*/}
                 {this.props.children}
             </div>
         );
     }
 }
 
+
+// the App.contextTypes snippet tells react-router to attach the children property to this component's props
 App.contextTypes = {
     router: React.PropTypes.object.isRequired
 };
