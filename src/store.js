@@ -1,28 +1,26 @@
-import {applyMiddleware, combineReducers, createStore} from "redux";
-import {promiseMiddleware} from "./middleware";
-import auth from "./reducers/auth";
-import common from "./reducers/common";
-import home from "./reducers/home";
-import settings from "./reducers/settings";
-import article from "./reducers/article";
-import articleList from "./reducers/articleList";
-import profile from "./reducers/profile";
-import editor from "./reducers/editor";
 
-const reducer = combineReducers({
-    article,
-    auth,
-    common,
-    home,
-    settings,
-    articleList,
-    profile,
-    editor
-});
+import { applyMiddleware, createStore } from 'redux';
+import { createLogger } from 'redux-logger'
+import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
+import { promiseMiddleware, localStorageMiddleware } from './middleware';
+import reducer from './reducer';
 
-const middleware = applyMiddleware(promiseMiddleware);
+import { routerMiddleware } from 'react-router-redux'
+import createHistory from 'history/createBrowserHistory';
 
-// applies the promise middleware to our store
-const store = createStore(reducer, middleware);
+export const history = createHistory();
 
-export default store;
+// Build the middleware for intercepting and dispatching navigation actions
+const myRouterMiddleware = routerMiddleware(history);
+
+const getMiddleware = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return applyMiddleware(myRouterMiddleware, promiseMiddleware, localStorageMiddleware);
+  } else {
+    // Enable additional logging in non-production environments.
+    return applyMiddleware(myRouterMiddleware, promiseMiddleware, localStorageMiddleware, createLogger())
+  }
+};
+
+export const store = createStore(
+  reducer, composeWithDevTools(getMiddleware()));

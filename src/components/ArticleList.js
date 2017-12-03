@@ -1,3 +1,4 @@
+
 import ArticlePreview from './ArticlePreview';
 import ListPagination from './ListPagination';
 import React from 'react';
@@ -22,7 +23,7 @@ const ArticleList = props => {
       {
         props.articles.map(article => {
           return (
-            <ArticlePreview key={article.slug} article={article} />
+            <ArticlePreview article={article} key={article.slug} />
           );
         })
       }

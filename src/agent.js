@@ -12,17 +12,17 @@ const tokenPlugin = req => {
   if (token) {
     req.set('authorization', `Token ${token}`);
   }
-};
+}
 
 const requests = {
-    get: url =>
-        superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
-    post: (url, body) =>
-        superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
-    del: url =>
-        superagent.del(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
-    put: (url, body) =>
-        superagent.put(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody)
+  del: url =>
+    superagent.del(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
+  get: url =>
+    superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
+  post: (url, body) =>
+    superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
+  put: (url, body) =>
+    superagent.put(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody)
 };
 
 const limit = (count, p) => `limit=${count}&offset=${p ? p * count : 0}`;
@@ -39,6 +39,10 @@ const Articles = {
     requests.del(`/articles/${slug}`),
   favoritedBy: (author, page) =>
     requests.get(`/articles?favorited=${encode(author)}&${limit(5, page)}`),
+  favorite: slug =>
+    requests.post(`/articles/${slug}/favorite`),
+  unfavorite: slug =>
+    requests.del(`/articles/${slug}/favorite`),
   feed: () =>
     requests.get('/articles/feed?limit=10&offset=0'),
   get: slug =>
@@ -49,33 +53,33 @@ const Articles = {
     requests.post('/articles', { article })
 };
 
-const Comments = {
-    create: (slug, comment) =>
-        requests.post(`/articles/${slug}/comments`, {comment}),
-    forArticle: slug =>
-        requests.get(`/articles/${slug}/comments`),
-    delete: (slug, commentId) =>
-        requests.del(`/articles/${slug}/comments/${commentId}`)
+const Auth = {
+  current: () =>
+    requests.get('/user'),
+  login: (email, password) =>
+    requests.post('/users/login', { user: { email, password } }),
+  register: (username, email, password) =>
+    requests.post('/users', { user: { username, email, password } }),
+  save: user =>
+    requests.put('/user', { user })
 };
 
-const Auth = {
-    current: () =>
-        requests.get('/user'),
-    login: (email, password) =>
-        requests.post('/users/login', {user: {email, password}}),
-    register: (username, email, password) =>
-        requests.post('/users', {user: {username, email, password}}),
-    save: user =>
-        requests.put('/user', {user})
+const Comments = {
+  create: (slug, comment) =>
+    requests.post(`/articles/${slug}/comments`, { comment }),
+  delete: (slug, commentId) =>
+    requests.del(`/articles/${slug}/comments/${commentId}`),
+  forArticle: slug =>
+    requests.get(`/articles/${slug}/comments`)
 };
 
 const Profile = {
-    follow: username =>
-        requests.post(`/profiles/${username}/follow`),
-    unfollow: username =>
-        requests.del(`/profiles/${username}/follow`),
-    get: username =>
-        requests.get(`/profiles/${username}`),
+  follow: username =>
+    requests.post(`/profiles/${username}/follow`),
+  get: username =>
+    requests.get(`/profiles/${username}`),
+  unfollow: username =>
+    requests.del(`/profiles/${username}/follow`)
 };
 
 const Tags = {
@@ -83,10 +87,10 @@ const Tags = {
 };
 
 export default {
-    Articles,
-    Auth,
-    Comments,
-    Profile,
-    Tags,
-    setToken: _token => {token = _token;}
+  Articles,
+  Auth,
+  Comments,
+  Profile,
+  Tags,
+  setToken: _token => { token = _token; }
 };
