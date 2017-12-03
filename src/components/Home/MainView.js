@@ -2,12 +2,13 @@ import ArticleList from '../ArticleList';
 import React from 'react';
 import agent from '../../agent';
 import { connect } from 'react-redux';
+import { CHANGE_TAB } from '../../constants/actionTypes';
 
 const YourFeedTab = props => {
   if (props.token) {
     const clickHandler = ev => {
       ev.preventDefault();
-      props.onTabClick('feed', agent.Articles.feed());
+      props.onTabClick('feed', agent.Articles.feed, agent.Articles.feed());
     }
 
     return (
@@ -26,7 +27,7 @@ const YourFeedTab = props => {
 const GlobalFeedTab = props => {
   const clickHandler = ev => {
     ev.preventDefault();
-    props.onTabClick('all', agent.Articles.all());
+    props.onTabClick('all', agent.Articles.all, agent.Articles.all());
   };
   return (
     <li className="nav-item">
@@ -56,20 +57,15 @@ const TagFilterTab = props => {
 
 const mapStateToProps = state => ({
   ...state.articleList,
+  tags: state.home.tags,
   token: state.common.token
 });
 
 const mapDispatchToProps = dispatch => ({
-  onSetPage: (tab, p) => dispatch({
-    type: 'SET_PAGE',
-    page: p,
-    payload: tab === 'feed' ? agent.Articles.feed(p) : agent.Articles.all(p)
-  }),
-  onTabClick: (tab, payload) => dispatch({ type: 'CHANGE_TAB', tab, payload })
+  onTabClick: (tab, pager, payload) => dispatch({ type: CHANGE_TAB, tab, pager, payload })
 });
 
 const MainView = props => {
-  const onSetPage = page => props.onSetPage(props.tab, page);
   return (
     <div className="col-md-9">
       <div className="feed-toggle">
@@ -88,10 +84,11 @@ const MainView = props => {
       </div>
 
       <ArticleList
+        pager={props.pager}
         articles={props.articles}
+        loading={props.loading}
         articlesCount={props.articlesCount}
-        currentPage={props.currentPage}
-        onSetPage={onSetPage} />
+        currentPage={props.currentPage} />
     </div>
   );
 };

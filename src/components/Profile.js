@@ -1,14 +1,20 @@
 import ArticleList from './ArticleList';
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import agent from '../agent';
 import { connect } from 'react-redux';
+import {
+  FOLLOW_USER,
+  UNFOLLOW_USER,
+  PROFILE_PAGE_LOADED,
+  PROFILE_PAGE_UNLOADED
+} from '../constants/actionTypes';
 
 const EditProfileSettings = props => {
   if (props.isUser) {
     return (
       <Link
-        to="settings"
+        to="/settings"
         className="btn btn-sm btn-outline-secondary action-btn">
         <i className="ion-gear-a"></i> Edit Profile Settings
       </Link>
@@ -57,23 +63,22 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onFollow: username => dispatch({
-    type: 'FOLLOW_USER',
+    type: FOLLOW_USER,
     payload: agent.Profile.follow(username)
   }),
-  onLoad: payload => dispatch({ type: 'PROFILE_PAGE_LOADED', payload }),
-  onSetPage: (page, payload) => dispatch({ type: 'SET_PAGE', page, payload }),
+  onLoad: payload => dispatch({ type: PROFILE_PAGE_LOADED, payload }),
   onUnfollow: username => dispatch({
-    type: 'UNFOLLOW_USER',
+    type: UNFOLLOW_USER,
     payload: agent.Profile.unfollow(username)
   }),
-  onUnload: () => dispatch({ type: 'PROFILE_PAGE_UNLOADED' })
+  onUnload: () => dispatch({ type: PROFILE_PAGE_UNLOADED })
 });
 
 class Profile extends React.Component {
   componentWillMount() {
     this.props.onLoad(Promise.all([
-      agent.Profile.get(this.props.params.username),
-      agent.Articles.byAuthor(this.props.params.username)
+      agent.Profile.get(this.props.match.params.username),
+      agent.Articles.byAuthor(this.props.match.params.username)
     ]));
   }
 
@@ -87,7 +92,7 @@ class Profile extends React.Component {
         <li className="nav-item">
           <Link
             className="nav-link active"
-            to={`@${this.props.profile.username}`}>
+            to={`/@${this.props.profile.username}`}>
             My Articles
           </Link>
         </li>
@@ -95,17 +100,12 @@ class Profile extends React.Component {
         <li className="nav-item">
           <Link
             className="nav-link"
-            to={`@${this.props.profile.username}/favorites`}>
+            to={`/@${this.props.profile.username}/favorites`}>
             Favorited Articles
           </Link>
         </li>
       </ul>
     );
-  }
-
-  onSetPage(page) {
-    const promise = agent.Articles.byAuthor(this.props.profile.username, page);
-    this.props.onSetPage(page, promise);
   }
 
   render() {
@@ -117,8 +117,6 @@ class Profile extends React.Component {
     const isUser = this.props.currentUser &&
       this.props.profile.username === this.props.currentUser.username;
 
-    const onSetPage = page => this.onSetPage(page)
-
     return (
       <div className="profile-page">
 
@@ -127,7 +125,7 @@ class Profile extends React.Component {
             <div className="row">
               <div className="col-xs-12 col-md-10 offset-md-1">
 
-                <img src={profile.image} className="user-img" />
+                <img src={profile.image} className="user-img" alt={profile.username} />
                 <h4>{profile.username}</h4>
                 <p>{profile.bio}</p>
 
@@ -154,10 +152,10 @@ class Profile extends React.Component {
               </div>
 
               <ArticleList
+                pager={this.props.pager}
                 articles={this.props.articles}
                 articlesCount={this.props.articlesCount}
-                currentPage={this.props.currentPage}
-                onSetPage={onSetPage} />
+                state={this.props.currentPage} />
             </div>
 
           </div>
@@ -169,4 +167,4 @@ class Profile extends React.Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
-export { Profile as Profile, mapStateToProps as mapStateToProps };
+export { Profile, mapStateToProps };
