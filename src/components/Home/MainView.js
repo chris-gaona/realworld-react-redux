@@ -1,14 +1,14 @@
 import ArticleList from '../ArticleList';
 import React from 'react';
-import {connect} from 'react-redux';
-import agent from "../../agent";
+import agent from '../../agent';
+import { connect } from 'react-redux';
 
 const YourFeedTab = props => {
   if (props.token) {
     const clickHandler = ev => {
       ev.preventDefault();
       props.onTabClick('feed', agent.Articles.feed());
-    };
+    }
 
     return (
       <li className="nav-item">
@@ -55,8 +55,8 @@ const TagFilterTab = props => {
 };
 
 const mapStateToProps = state => ({
-    ...state.articleList,
-    token: state.common.token
+  ...state.articleList,
+  token: state.common.token
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -65,36 +65,35 @@ const mapDispatchToProps = dispatch => ({
     page: p,
     payload: tab === 'feed' ? agent.Articles.feed(p) : agent.Articles.all(p)
   }),
-  onTabClick: (tab, payload) => dispatch({type: 'CHANGE_TAB', tab, payload})
+  onTabClick: (tab, payload) => dispatch({ type: 'CHANGE_TAB', tab, payload })
 });
 
 const MainView = props => {
   const onSetPage = page => props.onSetPage(props.tab, page);
+  return (
+    <div className="col-md-9">
+      <div className="feed-toggle">
+        <ul className="nav nav-pills outline-active">
 
-    return (
-      <div className="col-md-9">
-        <div className="feed-toggle">
-          <ul className="nav nav-pills outline-active">
+          <YourFeedTab
+            token={props.token}
+            tab={props.tab}
+            onTabClick={props.onTabClick} />
 
-            <YourFeedTab
-              token={props.token}
-              tab={props.tab}
-              onTabClick={props.onTabClick} />
+          <GlobalFeedTab tab={props.tab} onTabClick={props.onTabClick} />
 
-            <GlobalFeedTab tab={props.tab} onTabClick={props.onTabClick} />
+          <TagFilterTab tag={props.tag} />
 
-            <TagFilterTab tag={props.tag} />
-
-          </ul>
-        </div>
-
-        <ArticleList
-          articles={props.articles}
-          articlesCount={props.articlesCount}
-          currentPage={props.currentPage}
-          onSetPage={onSetPage} />
+        </ul>
       </div>
-    )
+
+      <ArticleList
+        articles={props.articles}
+        articlesCount={props.articlesCount}
+        currentPage={props.currentPage}
+        onSetPage={onSetPage} />
+    </div>
+  );
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainView);
